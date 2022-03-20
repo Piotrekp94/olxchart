@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>ECharts</title>
+    <!-- Include the ECharts file you just downloaded -->
+</head>
+<body>
+<!-- Prepare a DOM with a defined width and height for ECharts -->
+<div id="main" style="width: 600px;height:400px;"></div>
+<section id="entry-point"></section>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.3.1/dist/echarts.min.js"></script>
+<script type="text/javascript">
+    var chartDom = document.getElementById('main');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    option = {
+        legend: {},
+        tooltip: {},
+        dataset: {
+            // Provide a set of data.
+            source: [
+                ['xD', 1, 2, 3, 4],
+                ['Mean', 1, 2, 3, 4],
+                ['TrimmedMean', 1, 2, 3, 4],
+                ['Count', 2, 4, 6, 8],
+                ['Lowest', 4, 8, 12, 16],
+                ['Highest', 8, 16, 24, 32]
+
+            ]
+        },
+        // Declare an x-axis (category axis).
+        // The category map the first row in the dataset by default.
+        xAxis: {type: 'category'},
+        // Declare a y-axis (value axis).
+        yAxis: {},
+        // Declare several 'bar' series,
+        // every series will auto-map to each rows by default.
+        series: [{type: 'line'}, {type: 'bar'}, {type: 'bar'}]
+    };
+    option && myChart.setOption(option);
+
+</script>
+</body>
+</html>
