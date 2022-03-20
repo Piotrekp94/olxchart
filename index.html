@@ -9,37 +9,86 @@
 <!-- Prepare a DOM with a defined width and height for ECharts -->
 <div id="main" style="width: 600px;height:400px;"></div>
 <section id="entry-point"></section>
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.3.1/dist/echarts.min.js"></script>
+
 <script type="text/javascript">
-    var chartDom = document.getElementById('main');
-    var myChart = echarts.init(chartDom);
-    var option;
+    var dataArr = [];
+    // $.getJSON('http:/127.0.0.1:8080/category?categoryName=xD',
+    //     function(data) {
+    //         alert(data);
+    //     });
+    var userUrl = "http://127.0.0.1:8080/category?categoryName=Splatoon%202";
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        try
+        {
+            if (this.readyState == 4 ) {
+                var response = this.responseText;
+                const obj = JSON.parse(response);
+                dataArr = obj
+                initEchart(obj)
+            }
+        }
+        catch(erMs)
+        {
+            console.log(erMs)
+            console.log("XD")
 
-    option = {
-        legend: {},
-        tooltip: {},
-        dataset: {
-            // Provide a set of data.
-            source: [
-                ['xD', 1, 2, 3, 4],
-                ['Mean', 1, 2, 3, 4],
-                ['TrimmedMean', 1, 2, 3, 4],
-                ['Count', 2, 4, 6, 8],
-                ['Lowest', 4, 8, 12, 16],
-                ['Highest', 8, 16, 24, 32]
-
-            ]
-        },
-        // Declare an x-axis (category axis).
-        // The category map the first row in the dataset by default.
-        xAxis: {type: 'category'},
-        // Declare a y-axis (value axis).
-        yAxis: {},
-        // Declare several 'bar' series,
-        // every series will auto-map to each rows by default.
-        series: [{type: 'line'}, {type: 'bar'}, {type: 'bar'}]
+        }
     };
-    option && myChart.setOption(option);
+    xhttp.open("GET", userUrl, true);
+    xhttp.setRequestHeader('Content-Type', 'text/plain');
+    xhttp.send();
+
+    var myChart = echarts.init(document.getElementById('main'));
+
+    function initEchart(){
+        // specify chart configuration item and data
+        var option = {
+            title: {
+                text: 'Splatoon 2'
+            },
+            tooltip: {},
+            legend: {
+                data:['Sales']
+            },
+            xAxis: {
+                data: dataArr.xData
+            },
+            yAxis: {},
+            series: [{
+                name: 'Średnia cena',
+                type: 'line',
+                data: dataArr.mean
+            },
+            {
+                    name: 'Średnia cena z wykluczeniem 10% skrajnych wyników',
+                    type: 'line',
+                    data: dataArr.trimmedMean
+            },
+                {
+                    name: 'Liczba ofert',
+                    type: 'line',
+                    data: dataArr.count
+                },
+                {
+                    name: 'Najwyższa cena',
+                    type: 'line',
+                    data: dataArr.highest
+                },
+                {
+                    name: 'Najniższa cena',
+                    type: 'line',
+                    data: dataArr.lowest
+                }
+            ]
+        };
+
+        // use configuration item and data specified to show
+        myChart.setOption(option);
+    }
+
 
 </script>
 </body>
