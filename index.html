@@ -51,9 +51,8 @@
             {
                 if (this.readyState == 4 ) {
                     var response = this.responseText;
-                    const obj = JSON.parse(response);
-                    dataArr = obj
-                    initEchart(obj,dataArr)
+                    dataArr = JSON.parse(response);
+                    initEchart(dataArr)
                 }
             }
             catch(erMs)
@@ -75,6 +74,16 @@
             legend: {
                 data:['Średnia cena', 'Średnia cena bez skrajnych wyników', 'Liczba ofert', 'Najwyższa cena', 'Najniższa cena']
             },
+            title: {
+                show: dataArr.xData == null,
+                textStyle: {
+                    color: "grey",
+                    fontSize: 20
+                },
+                text: "Brak danych",
+                left: "center",
+                top: "center"
+            },
             xAxis: {
                 data: dataArr.xData
             },
@@ -83,15 +92,6 @@
                     type: 'value',
                     name: 'Cena',
                     position: 'left',
-                    alignTicks: true,
-                    axisLabel: {
-                        formatter: '{value}'
-                    }
-                },
-                {
-                    type: 'value',
-                    name: 'Liczba ofert',
-                    position: 'right',
                     alignTicks: true,
                     axisLabel: {
                         formatter: '{value}'
@@ -110,8 +110,7 @@
             },
                 {
                     name: 'Liczba ofert',
-                    type: 'line',
-                    yAxisIndex: 1,
+                    type: 'bar',
                     data: dataArr.count
                 },
                 {
@@ -128,6 +127,7 @@
         };
 
         // use configuration item and data specified to show
+        myChart.clear()
         myChart.setOption(option);
     }
 
